@@ -1,6 +1,7 @@
 import React, { FormEvent, useState } from "react";
 import { TodoType } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
+import styled from "styled-components";
 
 interface TodosProp {
   todos: TodoType[];
@@ -13,6 +14,10 @@ function InputForm({ todos, setTodos }: TodosProp) {
 
   const addTodoHandler = (event: FormEvent) => {
     event.preventDefault();
+    if (title === "" || content === "") {
+      alert("제목과 내용을 입력하세요");
+      return;
+    }
     const newTodo: TodoType = {
       id: uuidv4(),
       title,
@@ -25,24 +30,49 @@ function InputForm({ todos, setTodos }: TodosProp) {
   };
 
   return (
-    <form onSubmit={addTodoHandler}>
-      <label>Title : </label>
-      <input
-        type="text"
-        value={title}
-        placeholder="제목을 써주세요"
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <label>Content : </label>
-      <input
-        type="text"
-        value={content}
-        placeholder="내용을 써주세요"
-        onChange={(e) => setContent(e.target.value)}
-      />
+    <StyledForm onSubmit={addTodoHandler}>
+      <div>
+        <label>Title : </label>
+        <input
+          type="text"
+          value={title}
+          placeholder="제목을 써주세요"
+          maxLength={14}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Content : </label>
+        <input
+          type="text"
+          value={content}
+          placeholder="내용을 써주세요"
+          maxLength={30}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
       <button type="submit">Submit</button>
-    </form>
+    </StyledForm>
   );
 }
 
 export default InputForm;
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100px;
+  background-color: antiquewhite;
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  * {
+    height: 30px;
+  }
+
+  & div {
+    margin-right: 10px;
+  }
+`;

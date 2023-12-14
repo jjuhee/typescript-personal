@@ -6,16 +6,16 @@ import type { TodoType } from "./types/types";
 import styled from "styled-components";
 
 function App() {
-  const initialTodos: TodoType[] = [
-    {
-      id: uuidv4(),
-      title: "",
-      content: "",
-      isDone: false,
-    },
-  ];
+  // const initialTodos: TodoType[] = [
+  //   {
+  //     id: uuidv4(),
+  //     title: "",
+  //     content: "",
+  //     isDone: false,
+  //   },
+  // ];
 
-  const [todos, setTodos] = useState<TodoType[]>(initialTodos);
+  const [todos, setTodos] = useState<TodoType[]>([]);
 
   return (
     <MainContainer>
