@@ -10,6 +10,10 @@ const todosSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
+    setTodos: (state, action: PayloadAction<TodoType[]>) => {
+      return [...action.payload]; // 배열을 풀었다 묶어서 새거로 만들기?
+    },
+
     addTodo: (state, action: PayloadAction<TodoType>) => {
       state.push(action.payload);
     },
@@ -31,7 +35,7 @@ const todosSlice = createSlice({
 });
 
 // 액션크리에이터는 컴포넌트에서 사용하기 위해 export 하고
-export const { addTodo, deleteTodo, toggleDone } = todosSlice.actions;
+export const { setTodos, addTodo, deleteTodo, toggleDone } = todosSlice.actions;
 
 // store에서.. todos를 꺼낼 수 있게??
 export const selectTodo = (state: RootState) => state.todos;

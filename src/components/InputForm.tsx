@@ -4,13 +4,15 @@ import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
 import { addTodo, selectTodo } from "../redux/modules/todos";
+import axios from "axios";
+import { SERVER_URL } from "./TodoList";
 
 function InputForm() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const dispatch = useAppDispatch();
 
-  const addTodoHandler = (event: FormEvent) => {
+  const addTodoHandler = async (event: FormEvent) => {
     event.preventDefault();
     if (title === "" || content === "") {
       alert("제목과 내용을 입력하세요");
@@ -22,6 +24,9 @@ function InputForm() {
       content,
       isDone: false,
     };
+
+    // TODO: try-catch
+    await axios.post(SERVER_URL, newTodo);
     dispatch(addTodo(newTodo));
     setTitle("");
     setContent("");

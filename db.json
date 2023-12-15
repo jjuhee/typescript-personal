@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "content": "json-server를 배워봅시다.",
+      "isDone": true
+    },
+    {
+      "id": "56a92329-24a5-415d-9107-96aa2d23bccc",
+      "title": "조아",
+      "content": "조아",
+      "isDone": true
+    },
+    {
+      "id": "532cf7bf-5ae1-47fe-ac83-5d1dee6300d9",
+      "title": "3단계",
+      "content": "완료",
+      "isDone": true
+    }
+  ]
+}

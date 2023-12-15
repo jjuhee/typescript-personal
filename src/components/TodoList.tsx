@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TodoType } from "../types/types";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
-import { deleteTodo, toggleDone } from "../redux/modules/todos";
+import { deleteTodo, setTodos, toggleDone } from "../redux/modules/todos";
+import axios from "axios";
+
+export const SERVER_URL = "http://localhost:3001/todos"; //어디다가 선언하는게 좋을까
 
 interface TodosProps {
   todos: TodoType[];
@@ -14,13 +17,25 @@ function TodoList({ isDone }: TodosProps) {
   const todos = useAppSelector((state) => state.todos);
   const dispatch = useAppDispatch();
 
-  const doneCheckHandler = (id: string) => {
+  const fetchTodos = async () => {
+    // TODO: try-catch
+    const { data } = await axios.get(SERVER_URL);
+    dispatch(setTodos(data));
+  };
+
+  const doneCheckHandler = async (id: string) => {
+    await axios.patch(`${SERVER_URL}/${id}`, { isDone: !isDone });
     dispatch(toggleDone(id));
   };
 
-  const deleteHandler = (id: string) => {
+  const deleteHandler = async (id: string) => {
+    await axios.delete(`${SERVER_URL}/${id}`);
     dispatch(deleteTodo(id));
   };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   return (
     <div>
