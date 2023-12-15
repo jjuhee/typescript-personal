@@ -2,15 +2,13 @@ import React, { FormEvent, useState } from "react";
 import { TodoType } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
+import { addTodo, selectTodo } from "../redux/modules/todos";
 
-interface TodosProp {
-  todos: TodoType[];
-  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
-}
-
-function InputForm({ todos, setTodos }: TodosProp) {
+function InputForm() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   const addTodoHandler = (event: FormEvent) => {
     event.preventDefault();
@@ -24,7 +22,7 @@ function InputForm({ todos, setTodos }: TodosProp) {
       content,
       isDone: false,
     };
-    setTodos((prev) => [...todos, newTodo]);
+    dispatch(addTodo(newTodo));
     setTitle("");
     setContent("");
   };
@@ -41,6 +39,7 @@ function InputForm({ todos, setTodos }: TodosProp) {
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
+      <span></span>
       <div>
         <label>Content : </label>
         <input

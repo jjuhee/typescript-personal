@@ -1,6 +1,8 @@
 import React from "react";
 import { TodoType } from "../types/types";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
+import { deleteTodo, toggleDone } from "../redux/modules/todos";
 
 interface TodosProps {
   todos: TodoType[];
@@ -8,18 +10,16 @@ interface TodosProps {
   isDone: boolean;
 }
 
-function TodoList({ todos, setTodos, isDone }: TodosProps) {
+function TodoList({ isDone }: TodosProps) {
+  const todos = useAppSelector((state) => state.todos);
+  const dispatch = useAppDispatch();
+
   const doneCheckHandler = (id: string) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) return { ...todo, isDone: !isDone };
-      else return todo;
-    });
-    setTodos(newTodos);
+    dispatch(toggleDone(id));
   };
 
   const deleteHandler = (id: string) => {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+    dispatch(deleteTodo(id));
   };
 
   return (
