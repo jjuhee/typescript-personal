@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { TodoType } from "../types/types";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
-import { deleteTodo, setTodos, toggleDone } from "../redux/modules/todos";
-import axios from "axios";
+import { __deleteTodo, __getTodos, __toggleDone } from "../redux/modules/todos";
 
 export const SERVER_URL = "http://localhost:3001/todos"; //어디다가 선언하는게 좋을까
 
@@ -14,33 +13,37 @@ interface TodosProps {
 }
 
 function TodoList({ isDone }: TodosProps) {
-  const todos = useAppSelector((state) => state.todos);
+  const { isLoading, isError, error, todos } = useAppSelector(
+    (state) => state.todos
+  );
   const dispatch = useAppDispatch();
 
-  const fetchTodos = async () => {
-    // TODO: try-catch
-    const { data } = await axios.get(SERVER_URL);
-    dispatch(setTodos(data));
-  };
-
-  const doneCheckHandler = async (id: string) => {
-    await axios.patch(`${SERVER_URL}/${id}`, { isDone: !isDone });
-    dispatch(toggleDone(id));
+  const doneCheckHandler = async (id: string, isDone: boolean) => {
+    const payload = {
+      id,
+      isDone: !isDone,
+    };
+    dispatch(__toggleDone(payload));
   };
 
   const deleteHandler = async (id: string) => {
-    await axios.delete(`${SERVER_URL}/${id}`);
-    dispatch(deleteTodo(id));
+    dispatch(__deleteTodo(id));
   };
 
   useEffect(() => {
-    fetchTodos();
+    dispatch(__getTodos());
   }, []);
+
+  if (isError) {
+    console.log(error);
+  }
 
   return (
     <div>
       <Title>{!isDone ? "TodoList" : "DoneList"}</Title>
       <TodoListContainer>
+        {isLoading && <p>Loading...</p>}
+        {isError && <p> data를 가져오지 못했습니다...(-.-)(_ _)</p>}
         {todos
           .filter((todo) => todo.isDone === isDone)
           .map((todo) => {
@@ -50,7 +53,9 @@ function TodoList({ isDone }: TodosProps) {
                   <li>{todo.title}</li>
                   <li>{todo.content}</li>
                   <div>
-                    <button onClick={() => doneCheckHandler(todo.id)}>
+                    <button
+                      onClick={() => doneCheckHandler(todo.id, todo.isDone)}
+                    >
                       {!isDone ? "Done🧡" : "Cancle💔"}
                     </button>
                     <button onClick={() => deleteHandler(todo.id)}>

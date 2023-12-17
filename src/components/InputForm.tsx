@@ -2,10 +2,8 @@ import React, { FormEvent, useState } from "react";
 import { TodoType } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 import styled from "styled-components";
-import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
-import { addTodo, selectTodo } from "../redux/modules/todos";
-import axios from "axios";
-import { SERVER_URL } from "./TodoList";
+import { useAppDispatch } from "../redux/app/hooks";
+import { __addTodo } from "../redux/modules/todos";
 
 function InputForm() {
   const [title, setTitle] = useState<string>("");
@@ -25,9 +23,7 @@ function InputForm() {
       isDone: false,
     };
 
-    // TODO: try-catch
-    await axios.post(SERVER_URL, newTodo);
-    dispatch(addTodo(newTodo));
+    dispatch(__addTodo(newTodo));
     setTitle("");
     setContent("");
   };
