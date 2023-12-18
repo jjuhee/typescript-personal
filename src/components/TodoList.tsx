@@ -7,8 +7,6 @@ import { __deleteTodo, __getTodos, __toggleDone } from "../redux/modules/todos";
 export const SERVER_URL = "http://localhost:3001/todos"; //어디다가 선언하는게 좋을까
 
 interface TodosProps {
-  todos: TodoType[];
-  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
   isDone: boolean;
 }
 
