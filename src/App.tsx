@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import InputForm from "./components/InputForm";
 import TodoList from "./components/TodoList";
-import { v4 as uuidv4 } from "uuid";
-import type { TodoType } from "./types/types";
 import styled from "styled-components";
-
+import { QueryClientProvider, QueryClient } from "react-query";
 function App() {
-  const [todos, setTodos] = useState<TodoType[]>([]);
-
+  const queryClient = new QueryClient();
   return (
-    <MainContainer>
-      <InputForm />
-      <TodoList todos={todos} setTodos={setTodos} isDone={false} />
-      <TodoList todos={todos} setTodos={setTodos} isDone={true} />
-    </MainContainer>
+    <QueryClientProvider client={queryClient}>
+      <MainContainer>
+        <InputForm />
+        <TodoList isDone={false} />
+        <TodoList isDone={true} />
+      </MainContainer>
+    </QueryClientProvider>
   );
 }
 

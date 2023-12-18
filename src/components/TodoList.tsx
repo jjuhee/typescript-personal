@@ -1,42 +1,47 @@
-import React, { useEffect } from "react";
-import { TodoType } from "../types/types";
+import React from "react";
 import styled from "styled-components";
-import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
-import { __deleteTodo, __getTodos, __toggleDone } from "../redux/modules/todos";
-
-export const SERVER_URL = "http://localhost:3001/todos"; //어디다가 선언하는게 좋을까
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { deleteTodo, getTodos, switchTodo } from "../api/todos";
 
 interface TodosProps {
-  todos: TodoType[];
-  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
   isDone: boolean;
 }
 
 function TodoList({ isDone }: TodosProps) {
-  const { isLoading, isError, error, todos } = useAppSelector(
-    (state) => state.todos
-  );
-  const dispatch = useAppDispatch();
+  const { isLoading, isError, data: todos } = useQuery("todos", getTodos);
+
+  const queryClient = useQueryClient();
+
+  const switchMutation = useMutation(switchTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+    onError: (error) => {
+      console.log(error);
+      alert("서버에러 발생!💢");
+    },
+  });
+  const deleteMutation = useMutation(deleteTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+    onError: (error) => {
+      console.log(error);
+      alert("서버에러 발생!💢");
+    },
+  });
 
   const doneCheckHandler = async (id: string, isDone: boolean) => {
     const payload = {
       id,
       isDone: !isDone,
     };
-    dispatch(__toggleDone(payload));
+    switchMutation.mutate(payload);
   };
 
   const deleteHandler = async (id: string) => {
-    dispatch(__deleteTodo(id));
+    deleteMutation.mutate(id);
   };
-
-  useEffect(() => {
-    dispatch(__getTodos());
-  }, []);
-
-  if (isError) {
-    console.log(error);
-  }
 
   return (
     <div>
@@ -45,11 +50,11 @@ function TodoList({ isDone }: TodosProps) {
         {isLoading && <p>Loading...</p>}
         {isError && <p> data를 가져오지 못했습니다...(-.-)(_ _)</p>}
         {todos
-          .filter((todo) => todo.isDone === isDone)
-          .map((todo) => {
+          ?.filter((todo) => todo.isDone === isDone)
+          ?.map((todo) => {
             return (
               <>
-                <StyledUl>
+                <StyledUl key={todo.id}>
                   <li>{todo.title}</li>
                   <li>{todo.content}</li>
                   <div>
