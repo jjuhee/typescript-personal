@@ -5,8 +5,6 @@ import { useAppDispatch, useAppSelector } from "../redux/app/hooks";
 import { deleteTodo, toggleDone } from "../redux/modules/todos";
 
 interface TodosProps {
-  todos: TodoType[];
-  setTodos: React.Dispatch<React.SetStateAction<TodoType[]>>;
   isDone: boolean;
 }
 
