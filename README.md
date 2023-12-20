@@ -10,7 +10,7 @@ typescript를 이용하여 TodoList 만들기
 - 레벨2 (level2) : RTK 이용 Todolist
 - 레벨3 (level3) : RTK + json-server 이용 Todolist
 - 레벨4 (level4) : RTK + redux thunk 이용 Todolist
-- 레벨5 (level5) : RTK + react-query 이용 Todolist (진행 중..)
+- 레벨5 (level5) : RTK + react-query 이용 Todolist (완료 2023.12.19)
 
 
 ----
